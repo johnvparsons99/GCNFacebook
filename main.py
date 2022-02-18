@@ -1,13 +1,21 @@
 import numpy as np
 import tensorflow as tf
-import keras
 import scipy
 import sklearn
 import matplotlib
 
 import scipy.sparse as spr
 
+import keras
+from keras import optimizers as kop
+from keras import losses as kls
+from keras import metrics as kmt
+from keras.layers import *
+
+
 import data_handler
+import model
+from model import MyModel
 
 
 def temp_masks(train_split, test_split, val_split, num_nodes):
@@ -39,23 +47,26 @@ def main():
     print("Keras version:", keras.__version__)
 
     # Declare Variables
+    # File Path
     filepath = 'facebook_large/facebook.npz'
-    train = 80
-    test = 10
-    validate = 10
+
+    # Train/Test/Val/Split
+    train = 0.80
+    test = 0.10
+    validate = 0.10
+
+    # Parameters
+    epochs = 100
+    learning_rate = 0.001
+    dropout_rate = 0.5
 
     # Parse Data
     data = np.load(filepath)
     features, edges, target = data_handler.parse_npz_files(data)
 
-
     # Split EdgeList into two tensors
     page_one = data['edges'][:, 0]
     page_two = data['edges'][:, 1]
-    # Features
-    feats = tf.convert_to_tensor(data['features'])
-    # Labels
-    labels = tf.convert_to_tensor(data['target'])
 
     # Build Adjacency Matrix
     # Convert EdgeList to Sparse Adjacency Matrix
@@ -63,20 +74,43 @@ def main():
     a_bar = spr.coo_matrix((ones, (page_one, page_two)))  # Convert to SciPy COO Matrix
     a_bar.setdiag(1)  # Make all nodes adjacent to themselves
 
-    # Split Train/Test/Validate
-    num_nodes = a_bar.shape[0]
-    train_mask, test_mask, val_mask = temp_masks(0.8, 0.1, 0.1, 100)
+    # Important Variables
+    feats = tf.convert_to_tensor(data['features'])
+    labels = tf.convert_to_tensor(data['target'])
+    num_nodes = feats.shape[0]
+    num_feats = feats.shape[1]
 
-    print(train_mask)
-    print(test_mask)
-    print(val_mask)
+    # Split Train/Test/Validate
+    train_mask, test_mask, val_mask = temp_masks(0.8, 0.1, 0.1, num_nodes)
+
+    train_data = ([feats, a_bar], labels, train_mask)
+    validation_data = ([feats, a_bar], labels, val_mask)
+    test_data = ([feats, a_bar], labels, test_mask)
+
+    # Inputs
+    feats_input = keras.Input(shape=(num_feats,))
+    a_bar_input = keras.Input(shape=(num_nodes,), sparse=True)
+
+    # Model
+    dropout_1 = Dropout(dropout_rate)(feats_input)
 
     # Train Model
-    model = keras.Sequential
+    gcn_model: keras.Model = MyModel()
+
+    gcn_model.compile(optimizer=kop.adam_v2.Adam(),
+                      loss='categorical_crossentropy',
+                      metrics=['accuracy', 'mse'])
+
+    history = gcn_model.fit(x=train_data[0],
+                            y=train_data[1],
+                            sample_weight=train_data[2],
+                            batch_size=num_nodes,
+                            epochs=epochs,
+                            shuffle=False
+                            )
+
 
     # Test Model
-
-
 
 
 # Press the green button in the gutter to run the script.

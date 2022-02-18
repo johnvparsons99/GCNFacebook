@@ -1,4 +1,5 @@
 import json
+import tensorflow as tf
 import numpy as np
 
 
@@ -13,4 +14,6 @@ def parse_npz_files(data):
 def summarise_data(data):
     print(data.files)
     print(data.shape)
+
+
 

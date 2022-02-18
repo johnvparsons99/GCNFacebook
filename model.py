@@ -2,7 +2,7 @@ import tensorflow as tf
 from tensorflow import keras
 
 
-class Model(tf.keras.Model):
+class MyModel(tf.keras.Model):
 
     def __init__(self):
         super().__init__()
@@ -12,10 +12,10 @@ class Model(tf.keras.Model):
 
     def call(self, inputs, training=False):
         x = self.dense1(inputs)
-        if training:
-            x = self.dropout(x, training=training)
+        # if training:
+        #     x = self.dropout(x, training=training)
         return self.dense2(x)
 
 
-model = Model()
+# model = Model()
 
