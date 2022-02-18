@@ -95,7 +95,7 @@ def main():
     dropout_1 = Dropout(dropout_rate)(feats_input)
 
     # Train Model
-    gcn_model: keras.Model = MyModel()
+    gcn_model: keras.Model = MyModel(feats_input)
 
     gcn_model.compile(optimizer=kop.adam_v2.Adam(),
                       loss='categorical_crossentropy',
@@ -109,8 +109,8 @@ def main():
                             shuffle=False
                             )
 
-
     # Test Model
+
 
 
 # Press the green button in the gutter to run the script.
