@@ -6,16 +6,32 @@ import matplotlib
 
 import scipy.sparse as spr
 
-import keras
-from keras import optimizers as kop
-from keras import losses as kls
-from keras import metrics as kmt
-from keras.layers import *
-
+import tensorflow.python.keras as keras
+from tensorflow.python.keras import optimizers as ops
+from tensorflow.python.keras.layers import Dense, Dropout, Input
 
 import data_handler
 import model
 from model import MyModel
+
+# ========================= GLOBAL VARIABLES =========================
+# !!! IMPORTANT !!!
+# Ensure valid file path to facebook.npz here
+# Should be in the resources folder, in the same directory as this file
+FILE_PATH = r"./resources/facebook.npz"
+
+# Plotting Variables
+PLOT_TSNE = False  # Set whether or not you want to plot accuracy
+PLOT_ACCURACY = False  # Set whether or not you want to plot accuracy
+
+# model Variables
+EPOCHS = 200  # Set the number of epochs over which the Model should train
+LEARNING_RATE = 0.01  # Set the Model learning rate
+
+# Data Splitting Variables
+TRAIN_SPLIT = 0.80
+TEST_VAL_SPLIT = 0.20
+# ====================================================================
 
 
 def temp_masks(train_split, test_split, val_split, num_nodes):
@@ -23,13 +39,13 @@ def temp_masks(train_split, test_split, val_split, num_nodes):
     test_num = int(test_split * num_nodes)
     val_num = int(num_nodes - (train_num + test_num))
 
-    train_base = tf.ones([1, train_num], tf.uint8)
-    test_base = tf.ones([1, test_num], tf.uint8)
-    val_base = tf.ones([1, val_num], tf.uint8)
+    train_base = tf.ones([train_num], tf.uint8)
+    test_base = tf.ones([test_num], tf.uint8)
+    val_base = tf.ones([val_num], tf.uint8)
 
-    train_mask = tf.concat([train_base, tf.zeros_like(test_base), tf.zeros_like(val_base)], 1)
-    test_mask = tf.concat([tf.zeros_like(train_base), test_base, tf.zeros_like(val_base)], 1)
-    val_mask = tf.concat([tf.zeros_like(train_base), tf.zeros_like(test_base), val_base], 1)
+    train_mask = tf.concat([train_base, tf.zeros_like(test_base), tf.zeros_like(val_base)], 0)
+    test_mask = tf.concat([tf.zeros_like(train_base), test_base, tf.zeros_like(val_base)], 0)
+    val_mask = tf.concat([tf.zeros_like(train_base), tf.zeros_like(test_base), val_base], 0)
 
     return train_mask, test_mask, val_mask
 
@@ -44,7 +60,7 @@ def main():
     print("SciPy version:", scipy.__version__)
     print("SkLearn version:", sklearn.__version__)
     print("Matplotlib version:", matplotlib.__version__)
-    print("Keras version:", keras.__version__)
+    # print("Keras version:", keras.__version__)
 
     # Declare Variables
     # File Path
@@ -73,6 +89,9 @@ def main():
     ones = tf.ones_like(page_one)  # Create Ones Matrix to set
     a_bar = spr.coo_matrix((ones, (page_one, page_two)))  # Convert to SciPy COO Matrix
     a_bar.setdiag(1)  # Make all nodes adjacent to themselves
+    a_bar = data_handler.normalize_adjacency_matrix(a_bar)
+    a_bar = data_handler.coo_matrix_to_sparse_tensor(a_bar)
+    a_bar = tf.sparse.reorder(a_bar)
 
     # Important Variables
     feats = tf.convert_to_tensor(data['features'])
@@ -92,25 +111,28 @@ def main():
     a_bar_input = keras.Input(shape=(num_nodes,), sparse=True)
 
     # Model
-    dropout_1 = Dropout(dropout_rate)(feats_input)
 
     # Train Model
-    gcn_model: keras.Model = MyModel(feats_input)
+    gcn_model: keras.Model = MyModel(input_shape=tf.Tensor.get_shape(feats))
 
-    gcn_model.compile(optimizer=kop.adam_v2.Adam(),
-                      loss='categorical_crossentropy',
-                      metrics=['accuracy', 'mse'])
+    gcn_model.compile(optimizer='Adam',
+                      loss='sparse_categorical_crossentropy',
+                      metrics=['accuracy'])
 
-    history = gcn_model.fit(x=train_data[0],
-                            y=train_data[1],
-                            sample_weight=train_data[2],
-                            batch_size=num_nodes,
+    history = gcn_model.fit(x=(feats, a_bar),
+                            y=labels,
+                            sample_weight=train_mask,
+                            batch_size=22470,
                             epochs=epochs,
                             shuffle=False
                             )
 
     # Test Model
-
+    # Evaluate Model
+    gcn_model.evaluate(x=feats,
+                       y=labels,
+                       batch_size=22470,
+                       sample_weight=test_mask)
 
 
 # Press the green button in the gutter to run the script.
