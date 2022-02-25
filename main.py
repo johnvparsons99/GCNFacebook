@@ -124,15 +124,21 @@ def main():
                             sample_weight=train_mask,
                             batch_size=22470,
                             epochs=epochs,
-                            shuffle=False
+                            shuffle=False,
+                            validation_data=validation_data
                             )
 
     # Test Model
     # Evaluate Model
-    gcn_model.evaluate(x=feats,
+    # feats_test = feats[test_mask]
+    # a_bar_test = a_bar
+    # labels_test = labels[test_mask]
+
+    gcn_model.evaluate(x=[feats, a_bar],
                        y=labels,
                        batch_size=22470,
-                       sample_weight=test_mask)
+                       sample_weight=test_mask,
+                       )
 
 
 # Press the green button in the gutter to run the script.
