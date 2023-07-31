@@ -11,8 +11,8 @@
 * * *
 ### Contents
 * [Introduction to the Problem and the Dataset](#Introduction to the Problem and the Dataset)<br>
-* [The Algorithm](#The Algorithm)<br>
-* [Project Structure](#Project Structure)<br>
+* [The Algorithm](#the-algorithm)<br>
+* [Project Structure](#project-structure)<br>
 * [Running the Model and Dependencies](#Running the Model and Dependencies)<br>
 * [Data and Training](#Data and Training)<br>
 * [Building the Model](#Building the Model)<br>
