@@ -21,7 +21,10 @@ FILE_PATH = r"./facebook_large/facebook.npz"
 
 # Plotting Variables
 PLOT_ACCURACY = True  # Set whether or not you want to plot accuracy
-PLOT_TSNE = True  # Set whether or not you want to plot accuracy
+# !!! IMPORTANT !!!
+# The TSNE plot can take some time and should be set to false unless
+# the user wants to regenerate the polts used in the ReadMe
+PLOT_TSNE = False  # Set whether or not you want to plot accuracy
 
 # Model Variables
 EPOCHS = 300  # Set the number of epochs over which the Model should train
@@ -93,7 +96,7 @@ def main():
 
     # Plot TSNE
     if PLOT_TSNE:
-        data_handler.generate_tsne_plot(labels, feats, "")
+        data_handler.generate_tsne_plot(labels, feats)
 
 
 # Press the green button in the gutter to run the script.

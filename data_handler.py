@@ -114,13 +114,12 @@ def parse_data(data):
     return a_bar, feats, labels, num_nodes
 
 
-def generate_tsne_plot(labels, feats, mode):
+def generate_tsne_plot(labels, feats):
     """
     Generates and plots
     Args:
         labels:
         feats: The feature matrix of the nodes to be plotted
-        mode: Whether the test data or the train data is being plotted
 
     Returns:
 
@@ -139,7 +138,7 @@ def generate_tsne_plot(labels, feats, mode):
                 alpha=0.5, marker='.', label='Government')
     plt.scatter(tsne_data[labels == 3, 0], tsne_data[labels == 3, 1], c='m',
                 alpha=0.5, marker='.', label='Politician')
-    plt.title(f"GCN TSNE Plot ({mode} Data)")
+    plt.title(f"GCN TSNE Plot Data")
     plt.legend()
     plt.show()
 
