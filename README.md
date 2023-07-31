@@ -50,25 +50,25 @@ will become more accurate.
 
 ###  Project Structure
 
-There are two `.py` files in the project as well as a `resources` folder:
-- `myGraphModel.py`: This file contains the code involved in creating the 
+There are two `.py` files in the project as well as a `resources` folder and a `facebook_large` folder:
+- `model.py`: This file contains the code involved in creating the 
 Model. This consists of one class (`FaceGCNLayer`, which represents my 
 custom network layer) and one function (`makeMyModel`, which creates a 
 model which represents mt GCN and contains all the relevant layers).
 
-- `driver.py`: This fie is responsible for parsing the data, calling `makeMyModel`
-from `myGraphModel.py`, parsing and splitting the data in training/validation sets,
+- `main.py`: This fie is responsible for parsing the data, calling `makeMyModel`
+from `model.py`, parsing and splitting the data in training/validation sets,
 running the model, tracking and displaying the progress/accuracy of the model and 
 plotting a TSNE plot of the data.
-- `resources`: This is where you should put the `facebook.npz` file. This is
-also where the images embedded in this file are stored.
+- `resources`: This is also where the images embedded in this file are stored.
+- `facebook.npz`: This is the folder which contains the facebook.npz dataset.
 
 ### Running the Model and Dependencies
 
-To run the model, run `driver.py.main()`. Ensure that the `FILE_PATH` variable is set
+To run the model, run `main.py.main()`. Ensure that the `FILE_PATH` variable is set
 to the location of the `facebook.npz` file. The `facebook.npz` file will need to be 
 downloaded to an appropriate local location. by default the `FILE_PATH` variable points
-to the `resources` folder in the same directory as the `driver.py` file. The user can 
+to the `facebook_large` folder in the same directory as the `main.py` file. The user can 
 easily adjust the following
 model variables prior to running:
 - `PLOT_TSNE`: Set whether you want to plot accuracy.
@@ -104,7 +104,7 @@ testing/validation set to ensure it is not over-fitted.
 
 ###  Building the Model
 
-The model is built by calling the `makeMyModel` function in `myGraphModel.py`.
+The model is built by calling the `makeMyModel` function in `model.py`.
 This function creates a `tensorflow.keras.models.Sequential` object and adds 
 the following layers to it, where N is the number of nodes (varies between 
 training and testing/validation).
