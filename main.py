@@ -21,10 +21,10 @@ FILE_PATH = r"./facebook_large/facebook.npz"
 
 # Plotting Variables
 PLOT_ACCURACY = True  # Set whether or not you want to plot accuracy
-PLOT_TSNE = False  # Set whether or not you want to plot accuracy
+PLOT_TSNE = True  # Set whether or not you want to plot accuracy
 
 # Model Variables
-EPOCHS = 50  # Set the number of epochs over which the Model should train
+EPOCHS = 300  # Set the number of epochs over which the Model should train
 LEARNING_RATE = 0.01  # Set the Model learning rate
 DROPOUT_RATE = 0.4
 
@@ -67,7 +67,8 @@ def main():
     # Compile Model
     gcn_model.compile(optimizer='Adam',
                       loss='sparse_categorical_crossentropy',
-                      metrics=['accuracy'])
+                      metrics=['accuracy'],
+                      weighted_metrics=[])
 
     # Train Model
     history = gcn_model.fit(x=[feats, a_bar],
@@ -92,7 +93,7 @@ def main():
 
     # Plot TSNE
     if PLOT_TSNE:
-        data_handler.generate_tsne_plot(labels, feats, "Data")
+        data_handler.generate_tsne_plot(labels, feats, "")
 
 
 # Press the green button in the gutter to run the script.
