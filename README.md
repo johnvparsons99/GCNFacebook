@@ -10,14 +10,14 @@
 
 * * *
 ### Contents
-* [Introduction to the Problem and the Dataset](#Introduction to the Problem and the Dataset)<br>
+* [Introduction to the Problem and the Dataset](#introduction-to-the-problem-and-the-dataset)<br>
 * [The Algorithm](#the-algorithm)<br>
 * [Project Structure](#project-structure)<br>
-* [Running the Model and Dependencies](#Running the Model and Dependencies)<br>
-* [Data and Training](#Data and Training)<br>
-* [Building the Model](#Building the Model)<br>
-* [Compiling the Model](#Compiling the Model)<br>
-* [Performance and Analysis](#Performance and Analysis)<br>
+* [Running the Model and Dependencies](#running-the-model-and-dependencies)<br>
+* [Data and Training](#data-and-training)<br>
+* [Building the Model](#building-the-model)<br>
+* [Compiling the Model](#compiling-the-model)<br>
+* [Performance and Analysis](#performance-and-analysis)<br>
 * * *
 
 ### Introduction to the Problem and the Dataset
