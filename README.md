@@ -154,8 +154,7 @@ The model initially plateaued at around 72% accuracy, likely due to over fitting
 The addition of dropout layers fixed this issues as they eliminated the weights 
 responsible for the over-fitting.
 
-As can be seen from the following TSNE plots (one of the training data 
-one of the testing data), while there are pockets that are clearly segmented, 
+As can be seen from the following TSNE plot, while there are pockets that are clearly segmented, 
 the data overall is not very neatly segmented. This indicates that the 
 different categories share many similar features, making it difficult to 
 accurately categorise the nodes.
